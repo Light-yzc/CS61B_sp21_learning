@@ -5,7 +5,7 @@ import java.util.Observable;
 
 
 /** The state of a game of 2048.
- *  @author TODO: YOUR NAME HERE
+ *  @author Regenin TODO: YOUR NAME HERE
  */
 public class Model extends Observable {
     /** Current contents of the board. */
@@ -138,6 +138,13 @@ public class Model extends Observable {
      * */
     public static boolean emptySpaceExists(Board b) {
         // TODO: Fill in this function.
+        for (int i = 0; i < b.size(); i++) {
+            for (int j = 0; j < b.size(); j++) {
+                if (b.tile(i,j) == null){
+                    return true;
+                }
+            }
+        }
         return false;
     }
 
@@ -148,8 +155,24 @@ public class Model extends Observable {
      */
     public static boolean maxTileExists(Board b) {
         // TODO: Fill in this function.
+//        for (int i = 0; i < b.size(); i++) {
+//            for (int j = 0; j < b.size(); j++) {
+//                if (b.tile(i, j ) != null && b.tile(i,j).value() == MAX_PIECE) {
+//                    return true;
+//                }
+//            }
+//        }
+//        return false;
+//        another way
+        for (Tile t : b){
+            if(t != null && t.value() == MAX_PIECE){
+                return true;
+            }
+
+        }
         return false;
     }
+
 
     /**
      * Returns true if there are any valid moves on the board.
@@ -159,9 +182,28 @@ public class Model extends Observable {
      */
     public static boolean atLeastOneMoveExists(Board b) {
         // TODO: Fill in this function.
-        return false;
+        return emptySpaceExists(b) || second_Way(b);
     }
 
+    private static boolean second_Way(Board b) {
+        int[][] ways = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
+        int len = b.size();
+        for (Tile block : b){
+            int x = block.col();
+            int y = block.row();
+            for (int[] way : ways) {
+                int newX = x + way[0];
+                int newY = y + way[1];
+                if ((newX >= 0 && newX < len) && (newY < len && newY >= 0) && (b.tile(newX, newY).value() == b.tile(x, y).value())) {
+                    return true;
+                }
+//                if ((0 <= newX && newX < len) && (0 <= newY && newY < len) && (b.tile(newX, newY).value() == block.value())) {
+//                    return true;
+//                }
+            }
+        }
+        return false;
+    }
 
     @Override
      /** Returns the model as a string, used for debugging. */
